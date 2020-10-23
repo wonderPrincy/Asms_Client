@@ -39,7 +39,7 @@ const Signin = (props) => {
     localStorage.getItem("Name") || "Elana Saint"
   );
   const [isuser, setisuser] = useState(localStorage.getItem("isUser") || true);
-  const[role,setRole]=useState("");
+  const [role, setRole] = useState("");
 
   useEffect(() => {
     localStorage.setItem("profileURL", value);
@@ -47,8 +47,8 @@ const Signin = (props) => {
     localStorage.setItem("isUser", isuser);
     localStorage.setItem("email", email);
     localStorage.setItem("id", id);
-    localStorage.setItem("role",role);
-  }, [value, name, isuser, email, id,role]);
+    localStorage.setItem("role", role);
+  }, [value, name, isuser, email, id, role]);
 
   // verify user here
   if (props.match.path != "/login") {
@@ -238,7 +238,12 @@ const Signin = (props) => {
               return response.json();
             }).then((data) => {
               if (data.Error == null) {
-                setTimeout(() => { toast.success("Sent you an verfication email"); }, 200);
+                setValue(result.user.photoURL);
+                setName(result.user.displayName);
+                setEmail(result.user.email);
+                setRole("Admin");
+                setisuser("true");
+                props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
               }
               else {
                 setTimeout(() => { toast.error(data.Error); }, 200);
@@ -264,9 +269,42 @@ const Signin = (props) => {
           setName(result.user.displayName);
           setEmail(result.user.email);
           setisuser("true");
-          setTimeout(() => {
-            props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
-          }, 200);
+          var doc = {};
+          doc["Email"] = email;
+          doc["SocialAccount"] = true;
+          // var url = '/socialloggedInUser';
+          var url = 'http://localhost:5000/socialloggedInUser';
+          fetch(url,
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              method: "POST",
+              body: JSON.stringify(doc)
+
+            })
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              if (data.Error == null) {
+                var user = data[0];
+                setValue(man);
+                setName(user.Name);
+                setEmail(user.Email);
+                setId(user._id);
+                setRole(user.Role);
+                setisuser("true");
+                props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
+              }
+              else {
+                setTimeout(() => { toast.error(data.Error); }, 200);
+              }
+            });
+          // setTimeout(() => {
+          //   props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
+          // }, 200);
         });
     } catch (error) {
       setTimeout(() => {
@@ -287,9 +325,43 @@ const Signin = (props) => {
           setName(result.user.displayName);
           setEmail(result.user.email);
           setisuser("true");
-          setTimeout(() => {
-            props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
-          }, 200);
+          var doc = {};
+          doc["Email"] = email;
+          doc["SocialAccount"] = true;
+          // var url = '/socialloggedInUser';
+          var url = 'http://localhost:5000/socialloggedInUser';
+          fetch(url,
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              method: "POST",
+              body: JSON.stringify(doc)
+
+            })
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              if (data.Error == null) {
+                var user = data[0];
+                setValue(man);
+                setName(user.Name);
+                setEmail(user.Email);
+                setId(user._id);
+                setRole(user.Role);
+                setisuser("true");
+                props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
+              }
+              else {
+                setTimeout(() => { toast.error(data.Error); }, 200);
+              }
+            });
+          // setTimeout(() => {
+          //   props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
+          // }, 200);
+
         });
     } catch (error) {
       setTimeout(() => {
@@ -305,13 +377,41 @@ const Signin = (props) => {
         .auth()
         .signInWithPopup(facebookProvider)
         .then(function (result) {
-          setValue(result.user.photoURL);
-          setName(result.user.displayName);
-          setEmail(result.user.email);
-          setisuser("true");
-          setTimeout(() => {
-            props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
-          }, 200);
+          var doc = {};
+          doc["Name"] = result.user.displayName;
+          doc["Email"] = result.user.email;
+          doc["Password"] = null;
+          doc["Verified"] = true;
+          doc["Role"] = "Admin";
+          doc["ReferenceId"] = null;
+          doc["SocialAccount"] = true;
+          // var url = '/addUser';
+          var url = 'http://localhost:5000/addUser';
+          fetch(url,
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              method: "POST",
+              body: JSON.stringify(doc)
+            })
+            .then((response) => {
+              return response.json();
+            }).then((data) => {
+              if (data.Error == null) {
+                setValue(result.user.photoURL);
+                setName(result.user.displayName);
+                setEmail(result.user.email);
+                setRole("Admin");
+                setisuser("true");
+                props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
+              }
+              else {
+                setTimeout(() => { toast.error(data.Error); }, 200);
+              }
+            })
+            .catch(function (res) { console.log(res) })
         });
     } catch (error) {
       setTimeout(() => {
@@ -331,9 +431,42 @@ const Signin = (props) => {
           setName(result.user.displayName);
           setEmail(result.user.email);
           setisuser("true");
-          setTimeout(() => {
-            props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
-          }, 200);
+          var doc = {};
+          doc["Email"] = email;
+          doc["SocialAccount"] = true;
+          // var url = '/socialloggedInUser';
+          var url = 'http://localhost:5000/socialloggedInUser';
+          fetch(url,
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              method: "POST",
+              body: JSON.stringify(doc)
+
+            })
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              if (data.Error == null) {
+                var user = data[0];
+                setValue(man);
+                setName(user.Name);
+                setEmail(user.Email);
+                setId(user._id);
+                setRole(user.Role);
+                setisuser("true");
+                props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
+              }
+              else {
+                setTimeout(() => { toast.error(data.Error); }, 200);
+              }
+            });
+          // setTimeout(() => {
+          //   props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
+          // }, 200);
         });
     } catch (error) {
       setTimeout(() => {
@@ -349,13 +482,41 @@ const Signin = (props) => {
         .auth()
         .signInWithPopup(twitterProvider)
         .then(function (result) {
-          setValue(result.user.photoURL);
-          setName(result.user.displayName);
-          setEmail(result.user.email);
-          setisuser("true");
-          setTimeout(() => {
-            props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
-          }, 200);
+          var doc = {};
+          doc["Name"] = result.user.displayName;
+          doc["Email"] = result.user.email;
+          doc["Password"] = null;
+          doc["Verified"] = true;
+          doc["Role"] = "Admin";
+          doc["ReferenceId"] = null;
+          doc["SocialAccount"] = true;
+          // var url = '/addUser';
+          var url = 'http://localhost:5000/addUser';
+          fetch(url,
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              method: "POST",
+              body: JSON.stringify(doc)
+            })
+            .then((response) => {
+              return response.json();
+            }).then((data) => {
+              if (data.Error == null) {
+                setValue(result.user.photoURL);
+                setName(result.user.displayName);
+                setEmail(result.user.email);
+                setRole("Admin");
+                setisuser("true");
+                props.history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
+              }
+              else {
+                setTimeout(() => { toast.error(data.Error); }, 200);
+              }
+            })
+            .catch(function (res) { console.log(res) })
         });
     } catch (error) {
       setTimeout(() => {
