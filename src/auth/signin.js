@@ -126,6 +126,7 @@ const Signin = (props) => {
 
         })
         .then((response) => {
+          setLoading(false);
           return response.json();
         })
         .then((data) => {
@@ -184,6 +185,7 @@ const Signin = (props) => {
 
         })
         .then((response) => {
+          setLoading(false);
           return response.json();
         })
         .then((data) => {
@@ -195,7 +197,13 @@ const Signin = (props) => {
             setTimeout(() => { toast.error(data.Error); }, 200);
           }
         })
-        .catch(function (res) { console.log(res) })
+        // .catch(function (res) { 
+        //   setTimeout(() => {
+        //     toast.error(
+        //     res
+        //     );
+        //   }, 200);
+        // })
     }
     catch (error) {
       setTimeout(() => {
@@ -235,6 +243,7 @@ const Signin = (props) => {
               body: JSON.stringify(doc)
             })
             .then((response) => {
+              setLoading(false);
               return response.json();
             }).then((data) => {
               if (data.Error == null) {
