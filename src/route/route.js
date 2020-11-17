@@ -6,6 +6,8 @@ import Ecommerce from "../component/general/dashboard/ecommerce";
 // widgets
 import Generalwidgets from "../component/general/widgets/generalwidgets";
 import Chartswidgets from "../component/general/widgets/chartswidgets";
+import Stock from "../component/general/widgets/Stock";
+import ScanUpload from "../component/general/widgets/FileScanUpload";
 
 // Ui Element
 import Statecolor from "../component/ui-element/statecolor";
@@ -182,12 +184,19 @@ import Samplepage from "../pages/samplepage";
 import Supportticket from "../pages/supportticket";
 import Searchwebsite from "../pages/search/searchwebsite";
 
+// import UploadCsv from "../component/general/widgets/UploadCsv";
+
+
 export const routes = [
   { path: "/dashboard/default", Component: Default },
-  { path: "/dashboard/crypto", Component: Crypto },
+  { path: "/dashboard/scanner", Component: Crypto },
   { path: "/dashboard/ecommerce", Component: Ecommerce },
   { path: "/dashboard/generalwidget", Component: Generalwidgets },
   { path: "/dashboard/chartwidget", Component: Chartswidgets },
+  { path: "/dashboard/Stock", Component: Stock },
+  {path:"/dashboard/FileScanUpload",Component:ScanUpload},
+
+
 
   { path: "/ui-element/statecolor", Component: Statecolor },
   { path: "/ui-element/typography", Component: Typography },

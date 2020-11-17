@@ -51,7 +51,7 @@ const Signin = (props) => {
   }, [value, name, isuser, email, id, role]);
 
   // verify user here
-  if (props.match.path != "/login") {
+  if (props.match.path == "/stockmanage") {
     try {
       var doc = {};
       doc["Email"] = props.match.params.id;
@@ -72,6 +72,7 @@ const Signin = (props) => {
         .then((data) => {
           if (data.Error == null) {
             var user = data[0];
+            console.log(user);
             setValue(man);
             setName(user.Name);
             setEmail(user.Email);
@@ -132,6 +133,7 @@ const Signin = (props) => {
         .then((data) => {
           if (data.Error == null) {
             var user = data[0];
+            console.log(user);
             setValue(man);
             setName(user.Name);
             setEmail(user.Email);

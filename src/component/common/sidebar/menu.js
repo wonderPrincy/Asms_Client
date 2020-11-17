@@ -15,9 +15,9 @@ export const MENUITEMS = [
         path: `${process.env.PUBLIC_URL}/dashboard/default`,
       },
       {
-        title: "Crypto",
+        title: "Scanner",
         type: "link",
-        path: `${process.env.PUBLIC_URL}/dashboard/crypto`,
+        path: `${process.env.PUBLIC_URL}/dashboard/scanner`,
       },
       {
         title: "Ecommerce",
@@ -35,8 +35,27 @@ export const MENUITEMS = [
         type: "link",
         path: `${process.env.PUBLIC_URL}/dashboard/chartwidget`,
       },
+      {
+        title: "Add Stock",
+        type: "link",
+        path: `${process.env.PUBLIC_URL}/dashboard/Stock`,
+      },
+      {
+        title: "Upload csv",
+        type: "link",
+        path: `${process.env.PUBLIC_URL}/dashboard/FileScanUpload`,
+      }
     ],
   },
+  // {
+  //   title: "Upload Csv",
+  //   icon: <i class="fa fa-upload" aria-hidden="true"></i>,
+  //   path: `${process.env.PUBLIC_URL}/dashboard/FileScanUpload`,
+  //   type: "sub",
+  //   active: true,
+  //   bookmark: true,
+  //   children:[]
+  // },
   {
     title: "UI Kits",
     icon: <i className="pe-7s-portfolio pe-lg"></i>,

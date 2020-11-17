@@ -56,6 +56,8 @@ const Default = (props) => {
       setModal(false);
     }
   }, []);
+
+
   return (
     <Fragment>
       <Breadcrumb parent="Dashboard" title="Default" />

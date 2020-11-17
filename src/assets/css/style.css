@@ -1,0 +1,240 @@
+body{font-family:'Roboto',sans-serif;color:#000;overflow-x:hidden;font-weight:normal;margin:0;padding:0;background-image:url('../images/bg.png');background-size:cover;background-repeat:no-repeat}
+*{box-sizing:border-box}
+img{max-width:100%}
+.product-details{padding:50px 0}
+.container{width:100%;max-width:1170px;margin:0 auto;padding:0 15px}
+.row{position:relative;margin:0 -15px;display:flex;flex-wrap:wrap}
+.col{position:relative;padding:0 15px}
+.col-4{width:100%;max-width:33.333%}
+.col-8{width:100%;max-width:65.7777%}
+.col-6{width:100%;max-width:50%}
+#slider{width:100%;height:auto;margin:0 auto 10px;overflow:hidden;position:relative}
+#slider ul{overflow:hidden;zoom:1;position:relative;left:-38px;margin:0}
+#pager{text-align:center;display:flex}
+#slider ul li{font-size:1.5em;color:#fff;text-align:center;float:left;width:359px;height:auto}
+#slider ul li img{max-width:280px}
+#slider a{display:block;position:absolute;color:#fff;font-size:2em;top:50%;width:30px;height:30px;line-height:30px;text-align:center;margin-top:-15px;text-decoration:none;background:#000}
+#slider a#sliderNext{right:0}
+#slider a:hover{filter:alpha(opacity=50);opacity:.5}
+#pager{justify-content:center}
+.product-details-right h2{margin:0 0 10px 0}
+#pager a{display:inline-block;vertical-align:middle;vertical-align:auto;zoom:1;display:inline;cursor:pointer;-moz-transition-property:opacity;-o-transition-property:opacity;-webkit-transition-property:opacity;transition-property:opacity;-moz-transition-duration:.2s;-o-transition-duration:.2s;-webkit-transition-duration:.2s;transition-duration:.2s;-moz-transition-timing-function:ease-in;-o-transition-timing-function:ease-in;-webkit-transition-timing-function:ease-in;transition-timing-function:ease-in}
+#pager a:hover,#pager a.active{filter:alpha(opacity=50);opacity:.5}
+#pager a{padding:4px;max-width:55px}
+table{border-collapse:collapse;width:100%}
+.sibling-buttons a.tbl-button label {
+    text-decoration: none;
+    color: #626ed4;
+    border: solid 1px;
+    padding: 4px 7px;
+    border-radius: 5px;
+    font-size: 12px;
+    border-color: transparent;
+    transition: all .3s;
+}
+.sibling-buttons a.tbl-button {
+    color: #5b9dff;
+    border: solid 1px rgb(91 157 255 / 0);
+    text-decoration: none;
+    position: relative;
+}
+.sibling-buttons a.tbl-button input {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+.sibling-buttons a.tbl-button input:checked+label {
+    border-color: #626ed4;
+    box-shadow: 0 5px 5px #7e37d845;
+}
+tr:nth-child(even){background-color:#f1e9fb}
+.tables-row{display:flex;margin:20px 0 0 0;flex-wrap:wrap}
+.tables-row .table{width:100%;padding-right:15px;max-width:50%}
+.tables-row .graph {
+    width: 100%;
+    max-width: 50%;
+    background: #fff;
+    border: solid 1px #ddd;
+    padding: 8px;
+}
+.tables-row .graph .sibling-buttons {
+    text-align: center;
+    margin-bottom: 5px;
+}
+.tables-row .graph .sibling-buttons a.tbl-button {
+    display: inline-flex;
+}
+.tables-row .graph .sibling-buttons a.tbl-button input:checked+label {
+    box-shadow: none;
+}
+.tables-row .graph .sibling-buttons a.tbl-button input+label {
+    display: flex;
+}
+.tables-row .graph .sibling-buttons a.tbl-button input+label img {
+    width: 16px;
+}
+.tables-row .graph .sibling-buttons span {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    top: -3px;
+}
+.tables-row .graph .sibling-buttons.Days span {
+    top: 1px;
+}
+.white-tables table td select {
+    width: 80px;
+    height: 25px;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+}
+td,th{border:1px solid #ddd;padding:9px 2px;font-size:13px;text-align:center;font-weight:500;color:#282828}
+.tables-row td i{color:#058cab;font-style:normal;padding:0 5px}
+.tables-row .table span.tbl-bottom-txt{text-align:center;font-size:12px;display:block;margin:10px 0 0 0}
+.tables-row .table span.tbl-bottom-txt i{font-weight:600;font-style:normal;display:block}
+.white-tables{margin:30px 0 0 0}
+.white-tables table{border-radius:5px;overflow:hidden;box-shadow:0 5px 5px rgb(0 0 0 / 12%)}
+.white-tables table td{border:0;text-align:left;padding:9px 10px;font-weight:500;border-bottom:solid 1px #e3e3e3}
+.white-tables table tr{background:#fff}
+.white-tables.lr-border table td{border-left:solid 1px #e3e3e3}
+.white-tables.lr-border table td:first-child{padding:0;text-align:center}
+.white-tables.lr-border table td img{width:24px;margin:0 auto}
+.white-tables.lr-border table td a.purpel-btn{float:right;background:#626ed4;text-decoration:none;color:#fff;padding:4px 7px;margin:-4px 0;border-radius:5px}
+.white-tables table td #price-slider{width:100%;position:relative;height:4px;background:#eee;border-radius:5px;margin:15px 0}
+.white-tables table td #price-slider span.cercul{position:absolute;left:20%;top:-8px;width:20px;height:20px;background:#626ed4;border-radius:50px}
+.white-tables table td #price-slider:before{content:'';position:absolute;left:0;top:0;width:21%;height:4px;background:#626ed4;border-radius:10px}
+.white-tables table td .price-type{position:relative}
+.white-tables table td .price-type input[type="text"]{height:40px;width:calc(100% - 40px);background:#f0f0f0;border:0;border-radius:4px;text-align:right;padding:0 10px 0 0;float:right;font-size:13px;font-weight:600;color:#666;outline:0}
+.white-tables table td .price-type span{width:40px;display:inline-flex;height:40px;background:#626ed4;justify-content:center;align-items:center;color:#fff;border-radius:3px 0 0 3px}
+.amazon-seller{border-radius:5px;overflow:hidden;box-shadow:0 5px 5px rgb(0 0 0 / 12%);background:#fff;margin:30px 0 0 0}
+.amazon-seller span.amazon-icon{background:#e3e3e3;display:block;padding:7px 0 2px 15px}
+.amazon-seller form.search-form{display:block;padding:15px;position:relative}
+.amazon-seller form.search-form input[type="text"]{width:100%;height:35px;background:#f0f0f0;border:0;padding:0 0 0 50px;font-weight:600;color:#000;outline:0;border-radius:5px}
+.amazon-seller form.search-form img{position:absolute;left:23px;top:22px;width:22px}
+.amazon-seller .btn-group{padding:20px}
+.amazon-seller .btn-group button.purpel-btn{border:0;background:#7e37d8;color:#fff;padding:10px 20px 10px 20px;font-weight:600;margin:0 5px;border-radius:50px;transition:all .3s;cursor:pointer;outline:0}
+.amazon-seller .btn-group button.purpel-btn:hover{box-shadow:0 10px 10px rgb(126 55 216 / 27%)}
+.sibling-buttons a.tbl-button{color:#5b9dff;border:solid 1px rgb(91 157 255 / 0)}
+.sibling-buttons a.tbl-button.active{border:solid 1px #5b9dff}
+.sibling-buttons a.tbl-button:hover{background:0;border:solid 0px #5b9dff}
+.col-12{width:100%;max-width:100%}
+.data-tables-row #example_wrapper{width:100%}
+.data-tables-row #example_wrapper{overflow:auto;padding-bottom: 15px;}
+.data-tables-row #example_wrapper #example_length { margin-bottom: 15px;}
+s .data-tables-row #example_wrapper #example_length{margin-bottom:15px}
+.data-tables-row #example_wrapper #example_length select{border:0;background:#eee;padding:7px 10px;border-radius:50px}
+.data-tables-row #example_wrapper #example_length label{font-size:14px;color:#999;font-weight:400}
+.data-tables-row #example_wrapper #example_filter{display:none}
+.export-btn-group{float:right;display:flex;margin:0 0 -35px 0;position:relative;z-index:9}
+.export-btn-group button.btns{background:#7e37d8;color:#fff;border:0;margin:0 0 0 10px;font-weight:600;border-radius:5px;transition:all .3s;cursor:pointer}
+.export-btn-group button.btns:hover{box-shadow:0 10px 10px rgb(126 55 216 / 20%)}
+.export-btn-group button.btns.export-btn{padding:11px 30px}
+.export-btn-group button.btns.setting-btn{width:37px}
+.export-btn-group button.btns.setting-btn img{filter:invert(1);width:23px;margin:3px 0 0 0}
+.data-tables-row #example_wrapper #example{background:#fff;border:0}
+.data-tables-row #example_wrapper #example tr th,.data-tables-row #example_wrapper #example tr td{border:solid 1px #eee;text-align:left;font-weight:400;padding:9px 15px}
+.data-tables-row #example_wrapper #example tr th{font-weight:500;white-space:nowrap}
+.data-tables-row #example_wrapper #example_info{font-size:13px;font-weight:400}
+.data-tables-row #example_wrapper #example_paginate a{font-size:13px;font-weight:400}
+.data-tables-row #example_wrapper #example_paginate span .paginate_button.current{background:#7e37d8;border:0;color:#fff!important;border-radius:50px;height:31.5px;display:inline-flex;align-items:center}
+.data-tables-row #example_wrapper table#example{margin-bottom:15px}
+form.upload-csv-form { width: 100%; max-width: 500px; margin: 0 auto; background: #fff; padding: 30px; box-shadow: 0px 4px 6px rgb(0 0 0 / 11%); border-radius: 10px;}
+form.upload-csv-form h2{text-align:center;font-size:30px;margin-bottom:45px}
+form.upload-csv-form .form-group label{text-transform:uppercase;font-size:14px;font-weight:600}
+form.upload-csv-form .form-group .radio-btn-group{display:flex;margin:15px 0;justify-content:space-between}
+form.upload-csv-form .form-group .radio-btn-group .radio-inline{position:relative;padding:0;display:flex;align-items:center}
+form.upload-csv-form .form-group .radio-btn-group .radio-inline input{position:absolute;left:0;margin:0!important;width:100%;height:100%;opacity:0;z-index:9;cursor:pointer}
+form.upload-csv-form .form-group .radio-btn-group .radio-inline input+span{width:45px;height:28px;margin:0 10px 0 0;background:#eee;border-radius:50px;position:relative;transition:all .3s}
+form.upload-csv-form .form-group .radio-btn-group .radio-inline input+span:before{content:'';position:absolute;left:4px;top:4px;width:20px;height:20px;background:#fff;border-radius:50px;transition:all .3s}
+form.upload-csv-form .form-group .radio-btn-group .radio-inline input:checked+span{background:#7d36e0}
+form.upload-csv-form .form-group .radio-btn-group .radio-inline input:checked+span:before{left:20px}
+form.upload-csv-form .form-group select{width:100%;height:45px;background:#fff;border:solid 2px #eee;padding:0 10px;font-size:14px;font-weight:400;font-family:'Roboto',sans-serif;color:#ccc;cursor:pointer;margin-bottom:20px;margin-top:4px;border-radius:5px}
+form.upload-csv-form .Supplier-box{background:#eee;padding:15px;text-align:center}
+form.upload-csv-form .Supplier-box h3{margin:5px 0 20px 0;color:#404040}
+form.upload-csv-form .Supplier-box button.add-new-supplier{background:#198d42;border:0;color:#fff;padding:12px 26px;font-size:14px;border-radius:5px;margin:0 0 13px 0;text-transform:capitalize;font-weight:400;font-family:'Roboto',sans-serif;cursor:pointer;outline:0;transition:all .3s}
+form.upload-csv-form .Supplier-box button.add-new-supplier:hover{box-shadow:0 6px 10px rgb(25 141 66 / 23%)}
+form.upload-csv-form .Supplier-box .form-group{text-align:left}
+form.upload-csv-form .Supplier-box .form-group select{border-color:#ddd}
+form.upload-csv-form button.Import-btn{background:#7d36e0;border:0;color:#fff;padding:15px 26px;font-size:15px;border-radius:5px;margin:15px 0 13px 0;text-transform:capitalize;font-weight:400;font-family:'Roboto',sans-serif;cursor:pointer;outline:0;transition:all .3s;width:100%}
+form.upload-csv-form button.Import-btn:hover{box-shadow:0 6px 10px hsl(265deg 73% 55% / 22%)}
+form.upload-csv-form .form-group input[type="file"], form.upload-csv-form .form-group select {
+    border-radius: 100px;
+    appearance: none;
+}
+form.upload-csv-form .form-group select {
+    background-image: url(https://img.icons8.com/material-rounded/24/000000/expand-arrow.png);
+    background-repeat: no-repeat;
+    background-position: calc(100% - 10px) center;
+    padding-left: 20px;
+    outline: none !important;
+}
+form.upload-csv-form .form-group .file-upload-field {
+    position: relative;
+    display: block;
+    margin: 4px 0 20px 0;
+    width: 100%;
+    height: 45px;
+    background: #fff;
+    border: solid 2px #eee;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Roboto',sans-serif;
+    color: #ccc;
+    cursor: pointer;
+    margin-bottom: 20px;
+    margin-top: 4px;
+    border-radius: 100px;
+}
+form.upload-csv-form .form-group .file-upload-field input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9;
+    opacity: 0;
+    cursor: pointer;
+}
+form.upload-csv-form .form-group .file-upload-field span {
+    width: 105px;
+    height: 30px;
+    background: #7d36e0;
+    margin: 5px 0 0 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+
+@media (max-width: 991px){
+    .col-4 { max-width: 50%;}
+    .col-8 { max-width: 50%;}
+    #slider{max-width: 359px;}
+    .tables-row .table, .tables-row .graph{max-width: 100%;padding: 0;}
+    .tables-row .graph img {width: 100%;}
+    
+}
+
+@media (max-width: 767px){
+    .col-4, .col-6 { max-width: 100%;}
+    .col-8 { max-width: 100%;}
+    #slider{max-width: 359px;}
+    .tables-row .table, .tables-row .graph{max-width: 100%;padding: 0;}
+    .tables-row .graph img {width: 100%;}
+    .white-tables{overflow: auto;}
+    .white-tables.lr-border table td{white-space: nowrap;}
+    .white-tables.lr-border table td a.purpel-btn{display: none;}
+    .amazon-seller .btn-group button.purpel-btn{margin: 2px;padding: 10px 15px 10px 15px;}
+    #slider ul li img{float: left;}
+}

@@ -14,7 +14,8 @@ import Signin from "./auth/signin";
 import Error400 from "./pages/errors/error400";
 import Error404 from "./pages/errors/error404";
 import Error500 from "./pages/errors/error500";
-
+import StockManage from "./component/StockManage";
+import AddStock from "./component/general/widgets/AddStock"
 import Maintenance from "./pages/maintenance";
 
 import Login from "./pages/authentication/login";
