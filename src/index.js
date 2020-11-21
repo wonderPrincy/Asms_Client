@@ -26,6 +26,8 @@ import Comingsoon from "./pages/comingSoon/comingsoon";
 import ComingsoonVideo from "./pages/comingSoon/comingsoonVideo";
 import ComingsoonImg from "./pages/comingSoon/comingsoonImg";
 import ConfigDB from "./data/customizer/config";
+import FilesListData from "./component/general/widgets/FilesListData";
+import FilesList from "./component/general/widgets/FilesList";
 
 const Root = (props) => {
   const [anim, setAnim] = useState("");
@@ -57,9 +59,17 @@ const Root = (props) => {
               path={`${process.env.PUBLIC_URL}/login`}
               component={Signin}
             />
+             {/* <Route
+              path={`${process.env.PUBLIC_URL}/FilesList`}
+              component={FilesList}
+            /> */}
              <Route
               path={`${process.env.PUBLIC_URL}/verify/:id`}
               component={Signin}
+            />
+             <Route
+              path={`${process.env.PUBLIC_URL}/FilesListData/:id`}
+              component={FilesListData}
             />
             <Route
               path={`${process.env.PUBLIC_URL}/pages/error-400`}

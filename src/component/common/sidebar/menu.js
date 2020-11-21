@@ -44,6 +44,11 @@ export const MENUITEMS = [
         title: "Upload csv",
         type: "link",
         path: `${process.env.PUBLIC_URL}/dashboard/FileScanUpload`,
+      },
+      {
+        title: "Uploaded Files",
+        type: "link",
+        path: `${process.env.PUBLIC_URL}/dashboard/FilesList`,
       }
     ],
   },

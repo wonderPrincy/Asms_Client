@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "../../../assets/css/style.css";
 import Breadcrumb from "../../common/breadcrumb/breadcrumb";
+import { Link, NavLink, useHistory } from 'react-router-dom';
 //import { Papa } from '../../../../node_modules/papaparse';
 import Papa from "papaparse";
-import $ from 'jquery';
+import request from 'superagent';
 import {
   Container,
   Row,
@@ -21,17 +22,18 @@ import { Database, ShoppingBag, MessageCircle, UserPlus } from "react-feather";
 import Clock from "react-clock";
 import Calendar from "react-calendar";
 const FileScanUpload = (props) => {
-  console.log('cominnnnnnnnnggg');
   // eslint-disable-next-line
+  const history = useHistory();
   const [csvfile, set_csvfile] = useState(undefined);
   const [amazonResponseUK, set_amazonResponseUK] = useState(null);
   const [eur_gbp, seteur_gbp] = useState(0.88);
   const [headers, set_headers] = useState([]);
-  const [selectedupcId, setSelectedupcId] = useState(0);
-  const [selectedpriceId, setSelectedpriceId] = useState(0);
+  const [selectedupcId, setSelectedupcId] = useState(null);
+  const [selectedpriceId, setSelectedpriceId] = useState(null);
   const [fileId, set_fileId] = useState(null);
   const [selectedfield, setselectedfield] = useState(null);
-
+  const[supplier,set_supplier]=useState("");
+  const [isLoading, set_IsLoading] = useState(false);
   useEffect(() => {
     onloadmethod()
   }, []);
@@ -76,7 +78,22 @@ const FileScanUpload = (props) => {
   };
   const importCSV = () => {
     var file = document.getElementById('csvfiletxt').files[0];
-    console.log(csvfile);
+    request.post('http://localhost:5000/uploadCsvfile')
+      .field('avatar', file)
+      .end((err, res) => {
+        console.log(res);
+        if (res.status == 200) {
+          console.log(res.body);
+          localStorage.setItem("filename", res.body.data.name);
+          // this.setState({
+          //   done:'Success',
+          //   data: res.body
+          // });
+        }
+        else
+          alert("Error!")
+      })
+    // console.log(csvfile);
     Papa.parse(file, {
       header: false,
       complete: function (results) {
@@ -104,6 +121,7 @@ const FileScanUpload = (props) => {
   };
   const saveFileData = (e) => {
     e.preventDefault();
+    set_IsLoading(true);
     var userid = localStorage.getItem("id");
     var fileRecord = JSON.parse(localStorage.getItem("fileRecord") || "[]");
     var totalRecords = fileRecord.length;
@@ -113,11 +131,14 @@ const FileScanUpload = (props) => {
 
         doc["userid"] = userid;
         doc["totalRecords"] = totalRecords;
-        doc["supplierid"] = "test";
+        doc["supplierid"] =supplier;
         doc["CreatedOn"] = Date();
         doc["priceheader"] = selectedpriceId;
         doc["upcHeader"] = selectedupcId;
         doc["selectedField"] = selectedfield;
+        doc["filename"] = localStorage.getItem("filename");
+        doc["seller_id"] = "A7F8I9TOT44ZD";
+        doc["mws_auth_token"] = "amzn.mws.8eb9dc9c-e838-9c01-610a-39d8e5a4ac4a";
         var url = 'http://localhost:5000/addFile';
         fetch(url,
           {
@@ -136,9 +157,14 @@ const FileScanUpload = (props) => {
               var user = data[0];
               console.log(user);
               set_fileId(user._id);
-              saveFileRecordsData(user._id);
+              localStorage.setItem("fileUploadedId", user._id);
+              console.log(props);
+              set_IsLoading(false);
+              history.push(`${process.env.PUBLIC_URL}/dashboard/FilesList`);
+              //saveFileRecordsData(user._id);
             }
           });
+
       }
       catch (error) {
       }
@@ -154,8 +180,8 @@ const FileScanUpload = (props) => {
     fileRecord.forEach(element => {
       try {
         var doc = {};
-        doc["seller_id"]="A7F8I9TOT44ZD";
-        doc["mws_auth_token"]="amzn.mws.8eb9dc9c-e838-9c01-610a-39d8e5a4ac4a";
+        doc["seller_id"] = "A7F8I9TOT44ZD";
+        doc["mws_auth_token"] = "amzn.mws.8eb9dc9c-e838-9c01-610a-39d8e5a4ac4a";
         doc["userid"] = userid;
         doc["FileID"] = fileIdentity;
         doc["CreatedOn"] = Date();
@@ -179,8 +205,8 @@ const FileScanUpload = (props) => {
         doc["ProductName"] = element[1];
         doc["Qty"] = element[2];
         doc["Price"] = element[selectedpriceId];
-        doc["ProductGroup"]=null;
-        doc["weight"]=0.0;
+        doc["ProductGroup"] = null;
+        doc["weight"] = 0.0;
         doc["ListingPrice"] = 0.0;
         doc["ShippingPrice"] = 0.0;
         doc["IsAmazonFullFilled"] = false;
@@ -191,6 +217,8 @@ const FileScanUpload = (props) => {
         doc["OrderHandling_fee"] = 0.0;
         doc["PickPack_fee"] = 0.0;
         doc["WeightHandling_fee"] = 0.0;
+        doc["Profit"]=0.0;
+        doc["ROI"]=0.0;
         var url = 'http://localhost:5000/addFileData';
         fetch(url,
           {
@@ -207,8 +235,8 @@ const FileScanUpload = (props) => {
           .then((data) => {
             if (data.Error == null) {
               var user = data[0];
-             // localStorage.setItem("fileId", user._id);
-             // set_fileId(user._id);
+              // localStorage.setItem("fileId", user._id);
+              // set_fileId(user._id);
             }
 
           });
@@ -222,10 +250,11 @@ const FileScanUpload = (props) => {
 
   };
   const upcHeader = (event) => {
-    console.log(event);
+    console.log(event.target.value);
     setSelectedupcId(event.target.value);
   };
   const priceHeader = (event) => {
+    console.log(event.target.value);
     setSelectedpriceId(event.target.value);
   };
   return (
@@ -233,12 +262,38 @@ const FileScanUpload = (props) => {
       <Breadcrumb parent="Widgets" title="Upload CSV" />
 
       <Container fluid={true}>
+      <LoadingOverlay
+            active={isLoading}
+            spinner
+            //text='Loading your content...'
+            styles={{
+              overlay: (base) => ({
+                ...base,
+                background: 'rgba(241, 231, 254, 0.5)'  
+              }),
+              spinner: (base) => ({
+                ...base,
+                width: '100px',
+                '& svg circle': {
+                  stroke: 'rgba(255, 0, 0, 0.5)'
+                }
+              })
+            }}
+          >
         <div className="product-details">
           <div className="container">
             <div className="row">
               <div className="col col-12">
-                <div>< input type="file" id="csvfiletxt" onChange={(e) => handleChange(e)}></input></div>
+                {/* <div>< input type="file" id="csvfiletxt" onChange={(e) => handleChange(e)}></input></div> */}
+
                 <form className="upload-csv-form">
+                  <div className="form-group">
+                    <label>File Upload</label>
+                    <div className="file-upload-field">
+                      <input type="file" name="upload file" id="csvfiletxt" onChange={(e) => handleChange(e)} />
+                      <span>Choose File</span>
+                    </div>
+                  </div>
                   <div className="form-group">
                     <label>Identify products by</label>
                     <div className="radio-btn-group">
@@ -262,10 +317,11 @@ const FileScanUpload = (props) => {
                   <div className="form-group">
                     <label>UPC Field</label>
                     <select id="upcHeader" onChange={(e) => upcHeader(e)} >
+                    <option>Select Type</option>
                       {headers.map(item => (
                         <option
                           key={item.hedaerId}
-                          value={item.hedaerId}
+                          value={item.headerName}
                         >
                           {item.headerName}
                         </option>
@@ -279,14 +335,25 @@ const FileScanUpload = (props) => {
                       {headers.map(item => (
                         <option
                           key={item.hedaerId}
-                          value={item.hedaerId}
+                          value={item.headerName}
                         >
                           {item.headerName}
                         </option>
                       ))}
                     </select>
                   </div>
-                  <div className="Supplier-box">
+                  <div className="form-group">
+                    <label>Supplier</label>
+                    <Input
+                              className="btn-pill form-control"
+                              type="text"
+                              name="supplier"
+                               value={supplier}
+                               onChange={(e) => set_supplier(e.target.value)}
+                              placeholder="Email address"
+                            />
+                  </div>
+                  {/* <div className="Supplier-box">
                     <h3>Supplier</h3>
                     <button className="add-new-supplier">add a new supplier</button>
                     <div className="form-group">
@@ -298,16 +365,16 @@ const FileScanUpload = (props) => {
                         <option>3</option>
                       </select>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="form-group">
-                    <button className="Import-btn" onClick={(e) =>saveFileData(e)}>Import</button>
+                    <button className="Import-btn" onClick={(e) => saveFileData(e)}>Import</button>
                   </div>
                 </form>
               </div>
             </div>
           </div>
         </div>
-
+        </LoadingOverlay>
       </Container>
 
     </Fragment>

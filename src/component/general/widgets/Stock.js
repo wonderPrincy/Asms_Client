@@ -3,6 +3,8 @@ import Breadcrumb from "../../common/breadcrumb/breadcrumb";
 import "../../../assets/css/style.css";
 //import { Papa } from '../../../../node_modules/papaparse';
 import Papa from "papaparse";
+import Loader from 'react-loader-spinner';
+import LoadingOverlay from 'react-loading-overlay';
 import $ from 'jquery';
 import {
   Container,
@@ -23,6 +25,8 @@ import Calendar from "react-calendar";
 const Stock = (props) => {
   // eslint-disable-next-line
   const [csvfile, set_csvfile] = useState(undefined);
+  const [selectedASIN, setselectedASIN] = useState(null);
+  const [selectedCountry, set_selectedCountry] = useState(null);
   const [amazonResponseUK, set_amazonResponseUK] = useState(null);
   const [amazonResponseDE, set_amazonResponseDE] = useState(null);
   const [amazonResponseES, set_amazonResponseES] = useState(null);
@@ -33,6 +37,13 @@ const Stock = (props) => {
   const [amazonProfitIT, set_amazonProfitIT] = useState(0.0);
   const [amazonProfitFR, set_amazonProfitFR] = useState(0.0);
   const [amazonProfitES, set_amazonProfitES] = useState(0.0);
+
+  const [amazonROIUK, set_amazonROIUK] = useState(0.0);
+  const [amazonROIDE, set_amazonROIDE] = useState(0.0);
+  const [amazonROIIT, set_amazonROIIT] = useState(0.0);
+  const [amazonROIFR, set_amazonROIFR] = useState(0.0);
+  const [amazonROIES, set_amazonROIES] = useState(0.0);
+
   const [buyingPrice, set_buyingPrice] = useState(0.0);
   const [salesprice, set_salesPrice] = useState(0.0);
   const [eur_gbp, seteur_gbp] = useState(0.88);
@@ -47,6 +58,17 @@ const Stock = (props) => {
   const [buyBoxPriceAvg90, set_buyBoxPriceAVg90] = useState(0.0);
   const [buyBoxPriceAvg180, set_buyBoxPriceAvg180] = useState(0.0);
   const [keepaResponse, set_KeepaResponse] = useState(null);
+  const [keepaResponseDE, set_KeepaResponseDE] = useState(null);
+  const [keepaResponseIT, set_KeepaResponseIT] = useState(null);
+  const [keepaResponseES, set_KeepaResponseES] = useState(null);
+  const [keepaResponseFR, set_KeepaResponseFR] = useState(null);
+  const [keepaResponseGB, set_KeepaResponseGB] = useState(null);
+  const [keepaResponse30, set_KeepaResponse30] = useState(null);
+  const [keepaResponse90, set_KeepaResponse90] = useState(null);
+  const [keepaResponse180, set_KeepaResponse180] = useState(null);
+  const [keepaResponseAverage, set_KeepaResponseAverage] = useState(null);
+  const [vat, set_vat] = useState(0.0);
+  const [isLoading, set_IsLoading] = useState(false);
 
   useEffect(() => {
     onloadmethod()
@@ -96,6 +118,8 @@ const Stock = (props) => {
   const handleInput = (e) => {
     switch (e.target.name) {
       case 'asin':
+        set_IsLoading(true);
+        setselectedASIN(e.target.value);
         var doc = {};
         doc["seller_id"] = "A7F8I9TOT44ZD";
         doc["mws_auth_token"] = "amzn.mws.8eb9dc9c-e838-9c01-610a-39d8e5a4ac4a";
@@ -115,6 +139,7 @@ const Stock = (props) => {
             return amazonresponse.json();
           })
           .then((amazonresponsedata) => {
+            set_IsLoading(false);
             set_amazonResponseUK(amazonresponsedata[0].responseUK);
             set_amazonResponseDE(amazonresponsedata[0].responseDE);
             set_amazonResponseES(amazonresponsedata[0].responseES);
@@ -123,6 +148,7 @@ const Stock = (props) => {
           });
 
         //end keepa api calling
+        set_selectedCountry("GB");
         var url_uk = 'https://api.keepa.com/product?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=2&asin=' + e.target.value + '&offers=20&fbafees=1&rating=1&stats=180&history=0'
         fetch(url_uk)
           .then((response) => {
@@ -133,6 +159,7 @@ const Stock = (props) => {
           })
           .then((data) => {
             console.log(data.products[0].stats);
+            set_KeepaResponseGB(data.products[0]);
             set_KeepaResponse(data.products[0]);
             set_primePriceUK((((data.products[0].stats.current[0] != -1) ? data.products[0].stats.current[0] : data.products[0].stats.current[10]) / 100).toFixed(2));
             set_Title(data.products[0].title);
@@ -162,6 +189,13 @@ const Stock = (props) => {
           set_amazonProfitES((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2));
           set_amazonProfitFR((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2));
           set_amazonProfitIT((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2));
+
+          set_amazonROIUK(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+          set_amazonROIDE(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+          set_amazonROIES(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+          set_amazonROIFR(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+          set_amazonROIIT(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+
         }
         else {
           set_amazonProfitUK((Number(amazonResponseUK.listingPrice) - (Number(buyingPrice) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2));
@@ -169,6 +203,13 @@ const Stock = (props) => {
           set_amazonProfitES((Number(amazonResponseES.listingPrice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2));
           set_amazonProfitFR((Number(amazonResponseFR.listingPrice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2));
           set_amazonProfitIT((Number(amazonResponseIT.listingPrice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2));
+
+          set_amazonROIUK(((Number(amazonResponseUK.listingPrice) - (Number(buyingPrice) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseUK.listingPrice)).toFixed(2));
+          set_amazonROIDE(((Number(amazonResponseDE.listingPrice) - (Number(buyingPrice) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseDE.listingPrice)).toFixed(2));
+          set_amazonROIES(((Number(amazonResponseES.listingPrice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseES.listingPrice)).toFixed(2));
+          set_amazonROIFR(((Number(amazonResponseFR.listingPrice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseFR.listingPrice)).toFixed(2));
+          set_amazonROIIT(((Number(amazonResponseIT.listingPrice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseIT.listingPrice)).toFixed(2));
+
         }
         break;
       case 'buyingPrice':
@@ -178,6 +219,14 @@ const Stock = (props) => {
           set_amazonProfitES((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2));
           set_amazonProfitFR((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2));
           set_amazonProfitIT((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2));
+
+          set_amazonROIUK(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+          set_amazonROIDE(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+          set_amazonROIES(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+          set_amazonROIFR(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+          set_amazonROIIT(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+
+
         }
         else {
           set_amazonProfitUK((Number(amazonResponseUK.listingPrice) - (Number(buyingPrice) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2));
@@ -185,6 +234,13 @@ const Stock = (props) => {
           set_amazonProfitES((Number(amazonResponseES.listingPrice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2));
           set_amazonProfitFR((Number(amazonResponseFR.listingPrice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2));
           set_amazonProfitIT((Number(amazonResponseIT.listingPrice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2));
+
+          set_amazonROIUK(((Number(amazonResponseUK.listingPrice) - (Number(buyingPrice) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseUK.listingPrice)).toFixed(2));
+          set_amazonROIDE(((Number(amazonResponseDE.listingPrice) - (Number(buyingPrice) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseDE.listingPrice)).toFixed(2));
+          set_amazonROIES(((Number(amazonResponseES.listingPrice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseES.listingPrice)).toFixed(2));
+          set_amazonROIFR(((Number(amazonResponseFR.listingPrice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseFR.listingPrice)).toFixed(2));
+          set_amazonROIIT(((Number(amazonResponseIT.listingPrice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseIT.listingPrice)).toFixed(2));
+
         }
         //set_buying_price(e.target.value);
         break;
@@ -193,13 +249,310 @@ const Stock = (props) => {
 
 
   }
-  const KeepaEvent = (event) => {
-    console.log(event.target.name);
-    switch (event.target.name) {
-      case '30':
+  const KeepaEvent = (e) => {
+    switch (e.target.value) {
+      case 'DE':
+        set_selectedCountry("DE");
+        var url_de = 'https://api.keepa.com/product?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=3&asin=' + selectedASIN + '&offers=20&fbafees=1&rating=1&stats=180&history=0'
+        fetch(url_de)
+          .then((response) => {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            set_KeepaResponseDE(data.products[0]);
+            set_KeepaResponse(data.products[0]);
+            set_primePriceUK((((data.products[0].stats.current[0] != -1) ? data.products[0].stats.current[0] : data.products[0].stats.current[10]) / 100).toFixed(2));
+            set_Title(data.products[0].title);
+            set_prodImg("https://images-na.ssl-images-amazon.com/images/I/" + (data.products[0].imagesCSV.split(','))[0]);
+            set_buyBoxPriceUK(((data.products[0].stats.buyBoxPrice) / 100).toFixed(2));
 
+          });
+
+        var url_graph = 'https://api.keepa.com/graphimage?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=3&asin=' + selectedASIN
+        fetch(url_graph)
+          .then((response1) => {
+            if (response1.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response1.blob();
+          })
+          .then((data1) => {
+            set_graphImg(URL.createObjectURL(data1));
+          });
+        break;
+      case 'ES':
+        set_selectedCountry("ES");
+        var url_es = 'https://api.keepa.com/product?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=9&asin=' + selectedASIN + '&offers=20&fbafees=1&rating=1&stats=180&history=0'
+        fetch(url_es)
+          .then((response) => {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            set_KeepaResponseES(data.products[0]);
+            set_KeepaResponse(data.products[0]);
+            set_primePriceUK((((data.products[0].stats.current[0] != -1) ? data.products[0].stats.current[0] : data.products[0].stats.current[10]) / 100).toFixed(2));
+            set_Title(data.products[0].title);
+            set_prodImg("https://images-na.ssl-images-amazon.com/images/I/" + (data.products[0].imagesCSV.split(','))[0]);
+            set_buyBoxPriceUK(((data.products[0].stats.buyBoxPrice) / 100).toFixed(2));
+
+          });
+
+        var url_graph = 'https://api.keepa.com/graphimage?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=9&asin=' + selectedASIN
+        fetch(url_graph)
+          .then((response1) => {
+            if (response1.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response1.blob();
+          })
+          .then((data1) => {
+            set_graphImg(URL.createObjectURL(data1));
+          });
+        break;
+      case 'FR':
+        set_selectedCountry("FR");
+        var url_fr = 'https://api.keepa.com/product?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=4&asin=' + selectedASIN + '&offers=20&fbafees=1&rating=1&stats=180&history=0'
+        fetch(url_fr)
+          .then((response) => {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            set_KeepaResponseFR(data.products[0]);
+            set_KeepaResponse(data.products[0]);
+            set_primePriceUK((((data.products[0].stats.current[0] != -1) ? data.products[0].stats.current[0] : data.products[0].stats.current[10]) / 100).toFixed(2));
+            set_Title(data.products[0].title);
+            set_prodImg("https://images-na.ssl-images-amazon.com/images/I/" + (data.products[0].imagesCSV.split(','))[0]);
+            set_buyBoxPriceUK(((data.products[0].stats.buyBoxPrice) / 100).toFixed(2));
+
+          });
+
+        var url_graph = 'https://api.keepa.com/graphimage?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=4&asin=' + selectedASIN
+        fetch(url_graph)
+          .then((response1) => {
+            if (response1.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response1.blob();
+          })
+          .then((data1) => {
+            set_graphImg(URL.createObjectURL(data1));
+          });
+        break;
+      case 'IT':
+        set_selectedCountry("IT");
+        var url_it = 'https://api.keepa.com/product?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=8&asin=' + selectedASIN + '&offers=20&fbafees=1&rating=1&stats=180&history=0'
+        fetch(url_it)
+          .then((response) => {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            set_KeepaResponseIT(data.products[0]);
+            set_KeepaResponse(data.products[0]);
+            set_primePriceUK((((data.products[0].stats.current[0] != -1) ? data.products[0].stats.current[0] : data.products[0].stats.current[10]) / 100).toFixed(2));
+            set_Title(data.products[0].title);
+            set_prodImg("https://images-na.ssl-images-amazon.com/images/I/" + (data.products[0].imagesCSV.split(','))[0]);
+            set_buyBoxPriceUK(((data.products[0].stats.buyBoxPrice) / 100).toFixed(2));
+
+          });
+
+        var url_graph = 'https://api.keepa.com/graphimage?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=8&asin=' + selectedASIN
+        fetch(url_graph)
+          .then((response1) => {
+            if (response1.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response1.blob();
+          })
+          .then((data1) => {
+            set_graphImg(URL.createObjectURL(data1));
+          });
+        break;
+      case 'GB':
+        set_selectedCountry("GB");
+        var url_uk = 'https://api.keepa.com/product?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=2&asin=' + selectedASIN + '&offers=20&fbafees=1&rating=1&stats=180&history=0'
+        fetch(url_uk)
+          .then((response) => {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            set_KeepaResponseGB(data.products[0]);
+            set_KeepaResponse(data.products[0]);
+            set_primePriceUK((((data.products[0].stats.current[0] != -1) ? data.products[0].stats.current[0] : data.products[0].stats.current[10]) / 100).toFixed(2));
+            set_Title(data.products[0].title);
+            set_prodImg("https://images-na.ssl-images-amazon.com/images/I/" + (data.products[0].imagesCSV.split(','))[0]);
+            set_buyBoxPriceUK(((data.products[0].stats.buyBoxPrice) / 100).toFixed(2));
+
+          });
+
+        var url_graph = 'https://api.keepa.com/graphimage?key=hkn5eb01r375qna8uo7kuctociral8m10bltq01kl8ofgnk31kcacfrf8n52r4e9&domain=2&asin=' + selectedASIN
+        fetch(url_graph)
+          .then((response1) => {
+            if (response1.status >= 400) {
+              throw new Error("Bad response from server");
+            }
+            return response1.blob();
+          })
+          .then((data1) => {
+            set_graphImg(URL.createObjectURL(data1));
+          });
         break;
       default:
+    }
+  };
+  const KeepaHistory = (e) => {
+    if (selectedCountry == "GB") {
+      switch (e.target.value) {
+        case '30':
+          var result = keepaResponseGB;
+          console.log(result);
+          set_primePriceUK((((result.stats.avg30[0] != -1) ? result.stats.avg30[0] : result.stats.avg30[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg30[0]) / 100).toFixed(2));
+
+          break;
+        case '90':
+          var result = keepaResponseGB;
+          set_primePriceUK((((result.stats.avg90[0] != -1) ? result.stats.avg90[0] : result.stats.avg90[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg90[0]) / 100).toFixed(2));
+
+          break;
+        case '180':
+          var result = keepaResponseGB;
+          set_primePriceUK((((result.stats.avg180[0] != -1) ? result.stats.avg180[0] : result.stats.avg180[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg180[0]) / 100).toFixed(2));
+
+          break;
+        case 'Average':
+          var result = keepaResponseGB;
+          set_primePriceUK((((result.stats.avg[0] != -1) ? result.stats.avg[0] : result.stats.avg[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg[0]) / 100).toFixed(2));
+
+          break;
+        default:
+      }
+    }
+    else if (selectedCountry == "DE") {
+      var result = keepaResponseDE;
+      switch (e.target.value) {
+        case '30':
+          set_primePriceUK((((result.stats.avg30[0] != -1) ? result.stats.avg30[0] : result.stats.avg30[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg30[0]) / 100).toFixed(2));
+
+          break;
+        case '90':
+          set_primePriceUK((((result.stats.avg90[0] != -1) ? result.stats.avg90[0] : result.stats.avg90[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg90[0]) / 100).toFixed(2));
+
+          break;
+        case '180':
+          set_primePriceUK((((result.stats.avg180[0] != -1) ? result.stats.avg180[0] : result.stats.avg180[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg180[0]) / 100).toFixed(2));
+
+          break;
+        case 'Average':
+          set_primePriceUK((((result.stats.avg[0] != -1) ? result.stats.avg[0] : result.stats.avg[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg[0]) / 100).toFixed(2));
+
+          break;
+        default:
+      }
+    }
+    else if (selectedCountry == "ES") {
+      var result = keepaResponseES;
+      switch (e.target.value) {
+        case '30':
+          set_primePriceUK((((result.stats.avg30[0] != -1) ? result.stats.avg30[0] : result.stats.avg30[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg30[0]) / 100).toFixed(2));
+
+          break;
+        case '90':
+          set_primePriceUK((((result.stats.avg90[0] != -1) ? result.stats.avg90[0] : result.stats.avg90[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg90[0]) / 100).toFixed(2));
+
+          break;
+        case '180':
+          set_primePriceUK((((result.stats.avg180[0] != -1) ? result.stats.avg180[0] : result.stats.avg180[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg180[0]) / 100).toFixed(2));
+
+          break;
+        case 'Average':
+          set_primePriceUK((((result.stats.avg[0] != -1) ? result.stats.avg[0] : result.stats.avg[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg[0]) / 100).toFixed(2));
+
+          break;
+        default:
+      }
+    }
+    else if (selectedCountry == "IT") {
+      var result = keepaResponseIT;
+      switch (e.target.value) {
+        case '30':
+          set_primePriceUK((((result.stats.avg30[0] != -1) ? result.stats.avg30[0] : result.stats.avg30[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg30[0]) / 100).toFixed(2));
+
+          break;
+        case '90':
+          set_primePriceUK((((result.stats.avg90[0] != -1) ? result.stats.avg90[0] : result.stats.avg90[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg90[0]) / 100).toFixed(2));
+
+          break;
+        case '180':
+          set_primePriceUK((((result.stats.avg180[0] != -1) ? result.stats.avg180[0] : result.stats.avg180[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg180[0]) / 100).toFixed(2));
+
+          break;
+        case 'Average':
+          set_primePriceUK((((result.stats.avg[0] != -1) ? result.stats.avg[0] : result.stats.avg[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg[0]) / 100).toFixed(2));
+
+          break;
+        default:
+      }
+    }
+    else if (selectedCountry == "FR") {
+      var result = keepaResponseFR;
+      switch (e.target.value) {
+        case '30':
+          set_primePriceUK((((result.stats.avg30[0] != -1) ? result.stats.avg30[0] : result.stats.avg30[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg30[0]) / 100).toFixed(2));
+
+          break;
+        case '90':
+          set_primePriceUK((((result.stats.avg90[0] != -1) ? result.stats.avg90[0] : result.stats.avg90[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg90[0]) / 100).toFixed(2));
+
+          break;
+        case '180':
+          set_primePriceUK((((result.stats.avg180[0] != -1) ? result.stats.avg180[0] : result.stats.avg180[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg180[0]) / 100).toFixed(2));
+
+          break;
+        case 'Average':
+          set_primePriceUK((((result.stats.avg[0] != -1) ? result.stats.avg[0] : result.stats.avg[10]) / 100).toFixed(2));
+          set_buyBoxPriceUK(((result.stats.avg[0]) / 100).toFixed(2));
+
+          break;
+        default:
+      }
     }
   };
   const handleChange = (event) => {
@@ -225,16 +578,110 @@ const Stock = (props) => {
       console.log(data[0][i]);
     }
   };
+  const selectedVatOption = (event) => {
+    console.log(event.target.value);
+    if (event.target.value == "20%") {
+      let buyingPrice_inlcTax = Number(Number(buyingPrice) + (Number(buyingPrice * 20) / 100)).toFixed(2);
+      console.log(buyingPrice_inlcTax);
+      set_vat(((buyingPrice * 20) / 100).toFixed(2));
+      if (Number(salesprice != 0)) {
+        set_amazonProfitUK((Number(salesprice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2));
+        set_amazonProfitDE((Number(salesprice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2));
+        set_amazonProfitES((Number(salesprice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2));
+        set_amazonProfitFR((Number(salesprice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2));
+        set_amazonProfitIT((Number(salesprice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2));
+
+        set_amazonROIUK(((Number(salesprice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+        set_amazonROIDE(((Number(salesprice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+        set_amazonROIES(((Number(salesprice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+        set_amazonROIFR(((Number(salesprice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+        set_amazonROIIT(((Number(salesprice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+
+      }
+      else {
+        set_amazonProfitUK((Number(amazonResponseUK.listingPrice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2));
+        set_amazonProfitDE((Number(amazonResponseDE.listingPrice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2));
+        set_amazonProfitES((Number(amazonResponseES.listingPrice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2));
+        set_amazonProfitFR((Number(amazonResponseFR.listingPrice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2));
+        set_amazonProfitIT((Number(amazonResponseIT.listingPrice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2));
+
+        set_amazonROIUK(((Number(amazonResponseUK.listingPrice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseUK.listingPrice)).toFixed(2));
+        set_amazonROIDE(((Number(amazonResponseDE.listingPrice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseDE.listingPrice)).toFixed(2));
+        set_amazonROIES(((Number(amazonResponseES.listingPrice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseES.listingPrice)).toFixed(2));
+        set_amazonROIFR(((Number(amazonResponseFR.listingPrice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseFR.listingPrice)).toFixed(2));
+        set_amazonROIIT(((Number(amazonResponseIT.listingPrice) - (Number(buyingPrice_inlcTax) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseIT.listingPrice)).toFixed(2));
+
+      }
+    }
+
+    else {
+      set_vat(0.0);
+      if (Number(salesprice != 0)) {
+        set_amazonProfitUK((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2));
+        set_amazonProfitDE((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2));
+        set_amazonProfitES((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2));
+        set_amazonProfitFR((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2));
+        set_amazonProfitIT((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2));
+
+        set_amazonROIUK(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+        set_amazonROIDE(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+        set_amazonROIES(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+        set_amazonROIFR(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+        set_amazonROIIT(((Number(salesprice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2) * 100) / (Number(salesprice)).toFixed(2));
+
+      }
+      else {
+        set_amazonProfitUK((Number(amazonResponseUK.listingPrice) - (Number(buyingPrice) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2));
+        set_amazonProfitDE((Number(amazonResponseDE.listingPrice) - (Number(buyingPrice) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2));
+        set_amazonProfitES((Number(amazonResponseES.listingPrice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2));
+        set_amazonProfitFR((Number(amazonResponseFR.listingPrice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2));
+        set_amazonProfitIT((Number(amazonResponseIT.listingPrice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2));
+
+        set_amazonROIUK(((Number(amazonResponseUK.listingPrice) - (Number(buyingPrice) + Number(amazonResponseUK.ref_fee) + Number(amazonResponseUK.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseUK.listingPrice)).toFixed(2));
+        set_amazonROIDE(((Number(amazonResponseDE.listingPrice) - (Number(buyingPrice) + Number(amazonResponseDE.ref_fee) + Number(amazonResponseDE.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseDE.listingPrice)).toFixed(2));
+        set_amazonROIES(((Number(amazonResponseES.listingPrice) - (Number(buyingPrice) + Number(amazonResponseES.ref_fee) + Number(amazonResponseES.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseES.listingPrice)).toFixed(2));
+        set_amazonROIFR(((Number(amazonResponseFR.listingPrice) - (Number(buyingPrice) + Number(amazonResponseFR.ref_fee) + Number(amazonResponseFR.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseFR.listingPrice)).toFixed(2));
+        set_amazonROIIT(((Number(amazonResponseIT.listingPrice) - (Number(buyingPrice) + Number(amazonResponseIT.ref_fee) + Number(amazonResponseIT.fba_fee))).toFixed(2) * 100) / (Number(amazonResponseIT.listingPrice)).toFixed(2));
+
+      }
+    }
+  };
   return (
     <Fragment>
       <Breadcrumb parent="Widgets" title="General" />
 
       <Container fluid={true}>
+      <LoadingOverlay
+            active={isLoading}
+            spinner
+            //text='Loading your content...'
+            styles={{
+              overlay: (base) => ({
+                ...base,
+                background: 'rgba(241, 231, 254, 0.5)'  
+              }),
+              spinner: (base) => ({
+                ...base,
+                width: '100px',
+                '& svg circle': {
+                  stroke: 'rgba(255, 0, 0, 0.5)'
+                }
+              })
+            }}
+          >
+            
+         
         <Row>
+          {/* {
+            isLoading ? <div class="loading"></div> : <div></div>
+          } */}
+
           <div className="container">
             <div className="row">
               <div className="col col-6">
-                <input type="text" className="btn-pill form-control" name="asin" placeholder="Search here ..." onBlur={(e) => handleInput(e)} />
+                <input type="text" className="btn-pill form-control" name="asin"
+                  placeholder="Search here ..." onBlur={(e) => handleInput(e)}
+                  onChange={(e) => setselectedASIN(e.target.value)} />
               </div>
             </div>
           </div>
@@ -244,7 +691,7 @@ const Stock = (props) => {
                 <div className="col col-4">
                   <div className="product-image">
                     {
-                      (prodImg != "") ? <img src={prodImg} /> : <img src={require("../../../assets/images/default.png")} />
+                      (prodImg != "") ? <img src={prodImg} /> : <img src={require("../../../assets/images/default.png")} style={{ maxWidth: "280px" }} />
                     }
 
                   </div>
@@ -281,33 +728,25 @@ const Stock = (props) => {
                           </tr>
                           <tr>
                             <td colSpan="2">
-                              {/* <a href="#" className="tbl-button">Current</a> <i>30</i> <i>90</i> <i>180</i> <i>Average</i> */}
-                              {/* <div className="sibling-buttons">
-                                <a href="#" className="tbl-button active" name="current" onClick={(e) => KeepaEvent(e)}>Current</a>
-                                <a href="#" className="tbl-button" name="30" onClick={(e) => KeepaEvent(e)}>30</a>
-                                <a href="#" className="tbl-button" name="90" onClick={(e) => KeepaEvent(e)}>90</a>
-                                <a href="#" className="tbl-button" name="180" onClick={(e) => KeepaEvent(e)}>180</a>
-                                <a href="#" className="tbl-button" name="Average" onClick={(e) => KeepaEvent(e)}>Average</a>
-                              </div> */}
                               <form action="" className="sibling-buttons">
                                 <a href="#" className="tbl-button">
-                                  <input type="radio" id="current" name="gender" value="current" defaultChecked="true" />
+                                  <input type="radio" id="current" name="gender" value="current" defaultChecked="true" onChange={(e) => KeepaHistory(e)} />
                                   <label htmlFor="current">Current</label></a>
 
                                 <a href="#" className="tbl-button">
-                                  <input type="radio" id="30" name="gender" value="30" />
+                                  <input type="radio" id="30" name="gender" value="30" onChange={(e) => KeepaHistory(e)} />
                                   <label htmlFor="30">30</label></a>
 
                                 <a href="#" className="tbl-button">
-                                  <input type="radio" id="90" name="gender" value="90" />
+                                  <input type="radio" id="90" name="gender" value="90" onChange={(e) => KeepaHistory(e)} />
                                   <label htmlFor="90">90</label></a>
 
                                 <a href="#" className="tbl-button">
-                                  <input type="radio" id="180" name="gender" value="180" />
+                                  <input type="radio" id="180" name="gender" value="180" onChange={(e) => KeepaHistory(e)} />
                                   <label htmlFor="180">180</label></a>
 
                                 <a href="#" className="tbl-button">
-                                  <input type="radio" id="Average" name="gender" value="Average" />
+                                  <input type="radio" id="Average" name="gender" value="Average" onChange={(e) => KeepaHistory(e)} />
                                   <label htmlFor="Average">Average</label></a>
                               </form>
                             </td>
@@ -343,26 +782,26 @@ const Stock = (props) => {
                       <form action="" className="sibling-buttons">
                         <span>Marketplaces:</span>
                         <a href="#" className="tbl-button">
-                          <input type="radio" id="DE" name="gender" value="DE"   />
+                          <input type="radio" id="DE" name="gender" value="DE" onChange={(e) => KeepaEvent(e)} />
                           <label htmlFor="DE"><img src="https://www.countryflags.io/DE/flat/64.png" /></label></a>
 
                         <a href="#" className="tbl-button">
-                          <input type="radio" id="ES" name="gender" value="ES" />
+                          <input type="radio" id="ES" name="gender" value="ES" onChange={(e) => KeepaEvent(e)} />
                           <label htmlFor="ES"><img src="https://www.countryflags.io/ES/flat/64.png" /></label></a>
 
                         <a href="#" className="tbl-button">
-                          <input type="radio" id="FR" name="gender" value="FR" />
+                          <input type="radio" id="FR" name="gender" value="FR" onChange={(e) => KeepaEvent(e)} />
                           <label htmlFor="FR"><img src="https://www.countryflags.io/FR/flat/64.png" /></label></a>
 
                         <a href="#" className="tbl-button">
-                          <input type="radio" id="IT" name="gender" value="IT" />
+                          <input type="radio" id="IT" name="gender" value="IT" onChange={(e) => KeepaEvent(e)} />
                           <label htmlFor="IT"><img src="https://www.countryflags.io/IT/flat/64.png" /></label></a>
 
                         <a href="#" className="tbl-button">
-                          <input type="radio" id="GB" name="gender" value="GB" defaultChecked="true" />
+                          <input type="radio" id="GB" name="gender" value="GB" defaultChecked="true" onChange={(e) => KeepaEvent(e)} />
                           <label htmlFor="GB"><img src="https://www.countryflags.io/GB/flat/64.png" /></label></a>
                       </form>
-                      <div class="graph-div">
+                      <div className="graph-div">
                         {
                           (graphImg != "") ? <img src={graphImg} /> : <img src={require("../../../assets/images/graph.png")} />
                         }
@@ -414,33 +853,33 @@ const Stock = (props) => {
                         </td>
                       </tr>
                       <tr>
-                        <td>Dropdown</td>
-                        <td width="80"><select>
-                          <option>1</option>
-                          <option>1</option>
-                          <option>1</option>
-                        </select></td>
+                        <td>VAT</td>
+                        <td width="80">
+                          <select onChange={(e) => selectedVatOption(e)}>
+                            <option>No VAT</option>
+                            <option>20%</option>
+                          </select></td>
                       </tr>
                       <tr>
                         <td>VAT Deu</td>
-                        <td width="80">£ 1.60</td>
+                        <td width="80">£ {vat}</td>
                       </tr>
                       <tr>
                         <td><b>Profit</b></td>
-                        <td width="80"><b style={{ color: "#01a324" }}>£ 3.00</b></td>
+                        <td width="80"><b style={{ color: "#01a324" }}>£ {amazonProfitUK}</b></td>
                       </tr>
                       <tr>
                         <td><b>ROI</b></td>
-                        <td width="80"><b style={{ color: "#01a324" }}>£ 35.76%</b></td>
+                        <td width="80"><b style={{ color: "#01a324" }}>{amazonROIUK}%</b></td>
                       </tr>
-                      <tr>
+                      {/* <tr>
                         <td>Profit Margin</td>
                         <td width="80">£ 5.00</td>
                       </tr>
                       <tr>
                         <td>Breakeven Sale Price</td>
                         <td width="80">£ 5.00</td>
-                      </tr>
+                      </tr> */}
                     </tbody>
                   </table>
                 </div>
@@ -461,35 +900,35 @@ const Stock = (props) => {
                         <td>{(amazonResponseDE != null) ? (amazonResponseDE.rank) : "-"}</td>
                         <td>{(amazonResponseDE != null) ? (amazonResponseDE.listingPrice) : "-"} <a href="#" className="purpel-btn">FBA</a></td>
                         <td>£ {amazonProfitDE}</td>
-                        <td>136%</td>
+                        <td>{amazonROIDE}%</td>
                       </tr>
                       <tr>
                         <td><img src="https://www.countryflags.io/ES/shiny/64.png" /></td>
                         <td>{(amazonResponseES != null) ? (amazonResponseES.rank) : "-"}</td>
                         <td>{(amazonResponseES != null) ? (amazonResponseES.listingPrice) : "-"} <a href="#" className="purpel-btn">FBA</a></td>
                         <td>£ {amazonProfitES}</td>
-                        <td style={{ color: "#01a324" }}>36%</td>
+                        <td style={{ color: "#01a324" }}>{amazonROIES}%</td>
                       </tr>
                       <tr>
                         <td><img src="https://www.countryflags.io/FR/shiny/64.png" /></td>
                         <td>{(amazonResponseFR != null) ? (amazonResponseFR.rank) : "-"}</td>
                         <td>{(amazonResponseFR != null) ? (amazonResponseFR.listingPrice) : "-"} <a href="#" className="purpel-btn">FBA</a></td>
                         <td>£ {amazonProfitFR}</td>
-                        <td style={{ color: "#01a324" }}>36%</td>
+                        <td style={{ color: "#01a324" }}>{amazonROIFR}%</td>
                       </tr>
                       <tr>
                         <td><img src="https://www.countryflags.io/IT/shiny/64.png" /></td>
                         <td>{(amazonResponseIT != null) ? (amazonResponseIT.rank) : "-"}</td>
                         <td>{(amazonResponseIT != null) ? (amazonResponseIT.listingPrice) : "-"} <a href="#" className="purpel-btn">FBA</a></td>
                         <td>£ {amazonProfitIT}</td>
-                        <td>36%</td>
+                        <td>{amazonROIIT}%</td>
                       </tr>
                       <tr>
                         <td><img src="https://www.countryflags.io/GB/shiny/64.png" /></td>
                         <td>{(amazonResponseUK != null) ? (amazonResponseUK.rank) : "-"}</td>
                         <td>{(amazonResponseUK != null) ? (amazonResponseUK.listingPrice) : "-"}</td>
                         <td>£ {amazonProfitUK}</td>
-                        <td>-</td>
+                        <td>{amazonROIUK}%</td>
                       </tr>
                     </tbody>
                   </table>
@@ -536,7 +975,7 @@ const Stock = (props) => {
             </div>
           </div>
         </Row>
-
+        </LoadingOverlay>
       </Container>
 
     </Fragment>

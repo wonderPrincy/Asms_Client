@@ -91,11 +91,11 @@ const DataTables = () => {
                   data={data}
                   striped={true}
                   center={true}
-                  selectableRows
+                  //selectableRows
                   persistTableHead
-                  contextActions={contextActions}
-                  onSelectedRowsChange={handleRowSelected}
-                  clearSelectedRows={toggleCleared}
+                  // contextActions={contextActions}
+                  // onSelectedRowsChange={handleRowSelected}
+                  // clearSelectedRows={toggleCleared}
                 />
               </CardBody>
             </Card>

@@ -8,6 +8,8 @@ import Generalwidgets from "../component/general/widgets/generalwidgets";
 import Chartswidgets from "../component/general/widgets/chartswidgets";
 import Stock from "../component/general/widgets/Stock";
 import ScanUpload from "../component/general/widgets/FileScanUpload";
+import FilesList from "../component/general/widgets/FilesList";
+import FileListData from "../component/general/widgets/FilesListData";
 
 // Ui Element
 import Statecolor from "../component/ui-element/statecolor";
@@ -195,6 +197,8 @@ export const routes = [
   { path: "/dashboard/chartwidget", Component: Chartswidgets },
   { path: "/dashboard/Stock", Component: Stock },
   {path:"/dashboard/FileScanUpload",Component:ScanUpload},
+  {path:"/dashboard/FilesList",Component:FilesList},
+  {path:"/dashboard/FileListData",Component:FileListData},
 
 
 

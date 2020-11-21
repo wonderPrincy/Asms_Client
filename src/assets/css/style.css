@@ -238,3 +238,25 @@ form.upload-csv-form .form-group .file-upload-field span {
     .amazon-seller .btn-group button.purpel-btn{margin: 2px;padding: 10px 15px 10px 15px;}
     #slider ul li img{float: left;}
 }
+
+.loading {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    border: 10px solid rgba(0,0,0,.2 );
+    border-radius: 50%;
+    border-top-color: rgba(0,0,0,.4 );
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+    left: calc(50%);
+    top: calc(50%);
+    position: fixed;
+    z-index: 1;
+    }
+
+    @keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+    }
+    @-webkit-keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+    }
