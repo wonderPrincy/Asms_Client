@@ -24,8 +24,8 @@ const FilesListData = (props) => {
   const [data, setData] = useState(null);
   try {
     var fileid=localStorage.getItem("selectedfilelistdata");
+    console.log(fileid);
     var url = 'http://localhost:5000/getFilesData/' + fileid;
-    console.log(url);
     fetch(url)
       .then((response1) => {
         if (response1.status >= 400) {

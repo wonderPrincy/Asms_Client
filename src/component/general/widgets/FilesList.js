@@ -25,10 +25,27 @@ const FilesList = (props) => {
   const history = useHistory();
   const [amazonResponseUK, set_amazonResponseUK] = useState(null);
   const [getFiles, set_getFiles] = useState(null);
+  try {
+    var userid = localStorage.getItem("id");
+    var url = 'http://localhost:5000/getFiles/' + userid;
+    fetch(url)
+      .then((response1) => {
+        if (response1.status >= 400) {
+        }
+        return response1.json();
+      })
+      .then((data1) => {
+        // console.log(data1);
+        set_getFiles(data1);
+      });
+    //end here
 
-  useEffect(() => {
-    onloadmethod()
-  }, []);
+  }
+  catch (error) {
+  }
+  // useEffect(() => {
+  //   onloadmethod()
+  // }, []);
   // useEffect(() => {
   //   onloadmethod()
   // }, [getFiles]);
@@ -55,7 +72,9 @@ const FilesList = (props) => {
   }
   const navigateToFileData = (fileId) => {
 ///${fileId}
+localStorage.removeItem("selectedfilelistdata");
 localStorage.setItem("selectedfilelistdata",fileId);
+console.log(fileId);
     history.push(`${process.env.PUBLIC_URL}/dashboard/FileListData`);
   };
   // const onloadmethod = () => {
@@ -100,6 +119,7 @@ localStorage.setItem("selectedfilelistdata",fileId);
                     <th scope="col">Date</th>
                     <th scope="col">Supplier Name</th>
                     <th scope="col">Total Products</th>
+                    <th scope="col">testing</th>
                     <th scope="col">View Products</th>
                   </tr>
                 </thead>
@@ -111,6 +131,7 @@ localStorage.setItem("selectedfilelistdata",fileId);
                           <td>{new Date(item.CreatedOn).toLocaleDateString()}</td>
                           <td>{item.supplierid}</td>
                           <td>{item.totalRecords}</td>
+                          <td>{item._id}</td>
                           <td>
                             <Button
                               color="primary btn-block"
