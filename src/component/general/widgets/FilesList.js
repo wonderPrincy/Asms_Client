@@ -43,9 +43,9 @@ const FilesList = (props) => {
   }
   catch (error) {
   }
-  // useEffect(() => {
-  //   onloadmethod()
-  // }, []);
+  useEffect(() => {
+    //onloadmethod()
+  }, []);
   // useEffect(() => {
   //   onloadmethod()
   // }, [getFiles]);
@@ -119,7 +119,7 @@ console.log(fileId);
                     <th scope="col">Date</th>
                     <th scope="col">Supplier Name</th>
                     <th scope="col">Total Products</th>
-                    <th scope="col">testing</th>
+                    <th scope="col">Marketplace</th>
                     <th scope="col">View Products</th>
                   </tr>
                 </thead>
@@ -131,11 +131,11 @@ console.log(fileId);
                           <td>{new Date(item.CreatedOn).toLocaleDateString()}</td>
                           <td>{item.supplierid}</td>
                           <td>{item.totalRecords}</td>
-                          <td>{item._id}</td>
+                          <td>{item.marketplace}</td>
                           <td>
                             <Button
                               color="primary btn-block"
-                              onClick={(e) => navigateToFileData(item._id)}
+                              onClick={(e) => navigateToFileData(item.filename)}
                             >
                               View Products
                                     </Button>

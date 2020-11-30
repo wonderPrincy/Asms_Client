@@ -22,25 +22,28 @@ const FilesListData = (props) => {
   const [amazonResponseUK, set_amazonResponseUK] = useState(null);
   const [getFiles, set_getFiles] = useState(null);
   const [data, setData] = useState(null);
-  try {
-    var fileid=localStorage.getItem("selectedfilelistdata");
-    console.log(fileid);
-    var url = 'http://localhost:5000/getFilesData/' + fileid;
-    fetch(url)
-      .then((response1) => {
-        if (response1.status >= 400) {
-        }
-        return response1.json();
-      })
-      .then((data1) => {
-        console.log(data1);
-        setData(data1);
-      });
-    //end here
-
-  }
-  catch (error) {
-  }
+ 
+  useEffect(() => {
+    try {
+      var fileid=localStorage.getItem("selectedfilelistdata");
+      console.log(fileid);
+      var url = 'http://localhost:5000/getFilesData/' + fileid;
+      fetch(url)
+        .then((response1) => {
+          if (response1.status >= 400) {
+          }
+          return response1.json();
+        })
+        .then((data1) => {
+          console.log(data1);
+          setData(data1);
+        });
+      //end here
+  
+    }
+    catch (error) {
+    }
+  }, []);
   const columns = [
     {
       name: "ASIN",

@@ -33,8 +33,9 @@ const FileScanUpload = (props) => {
   const [selectedpriceId, setSelectedpriceId] = useState(null);
   const [fileId, set_fileId] = useState(null);
   const [selectedfield, setselectedfield] = useState(null);
-  const[supplier,set_supplier]=useState("");
+  const [supplier, set_supplier] = useState("");
   const [isLoading, set_IsLoading] = useState(false);
+  const[selectedMarketPlace,setselectedMarketPlace]=useState("UK");
   useEffect(() => {
     onloadmethod()
   }, []);
@@ -85,6 +86,7 @@ const FileScanUpload = (props) => {
         console.log(res);
         if (res.status == 200) {
           console.log(res.body);
+          localStorage.removeItem("filename");
           localStorage.setItem("filename", res.body.data.name);
           // this.setState({
           //   done:'Success',
@@ -132,12 +134,13 @@ const FileScanUpload = (props) => {
 
         doc["userid"] = userid;
         doc["totalRecords"] = totalRecords;
-        doc["supplierid"] =supplier;
+        doc["supplierid"] = supplier;
         doc["CreatedOn"] = Date();
         doc["priceheader"] = selectedpriceId;
         doc["upcHeader"] = selectedupcId;
         doc["selectedField"] = selectedfield;
         doc["filename"] = localStorage.getItem("filename");
+        doc["marketplace"]=selectedMarketPlace;
         doc["seller_id"] = "A7F8I9TOT44ZD";
         doc["mws_auth_token"] = "amzn.mws.8eb9dc9c-e838-9c01-610a-39d8e5a4ac4a";
         var url = 'http://localhost:5000/addFile';
@@ -218,8 +221,8 @@ const FileScanUpload = (props) => {
         doc["OrderHandling_fee"] = 0.0;
         doc["PickPack_fee"] = 0.0;
         doc["WeightHandling_fee"] = 0.0;
-        doc["Profit"]=0.0;
-        doc["ROI"]=0.0;
+        doc["Profit"] = 0.0;
+        doc["ROI"] = 0.0;
         var url = 'http://localhost:5000/addFileData';
         fetch(url,
           {
@@ -258,103 +261,117 @@ const FileScanUpload = (props) => {
     console.log(event.target.value);
     setSelectedpriceId(event.target.value);
   };
+  const marketplace = (event) => {
+    setselectedMarketPlace(event.target.value);
+  };
   return (
     <Fragment>
       <Breadcrumb parent="Widgets" title="Upload CSV" />
 
       <Container fluid={true}>
-      <LoadingOverlay
-            active={isLoading}
-            spinner
-            //text='Loading your content...'
-            styles={{
-              overlay: (base) => ({
-                ...base,
-                background: 'rgba(241, 231, 254, 0.5)'  
-              }),
-              spinner: (base) => ({
-                ...base,
-                width: '100px',
-                '& svg circle': {
-                  stroke: 'rgba(255, 0, 0, 0.5)'
-                }
-              })
-            }}
-          >
-        <div className="product-details">
-          <div className="container">
-            <div className="row">
-              <div className="col col-12">
-                {/* <div>< input type="file" id="csvfiletxt" onChange={(e) => handleChange(e)}></input></div> */}
+        <LoadingOverlay
+          active={isLoading}
+          spinner
+          //text='Loading your content...'
+          styles={{
+            overlay: (base) => ({
+              ...base,
+              background: 'rgba(241, 231, 254, 0.5)'
+            }),
+            spinner: (base) => ({
+              ...base,
+              width: '100px',
+              '& svg circle': {
+                stroke: 'rgba(255, 0, 0, 0.5)'
+              }
+            })
+          }}
+        >
+          <div className="product-details">
+            <div className="container">
+              <div className="row">
+                <div className="col col-12">
+                  {/* <div>< input type="file" id="csvfiletxt" onChange={(e) => handleChange(e)}></input></div> */}
 
-                <form className="upload-csv-form">
-                  <div className="form-group">
-                    <label>File Upload</label>
-                    <div className="file-upload-field">
-                      <input type="file" name="upload file" id="csvfiletxt" onChange={(e) => handleChange(e)} />
-                      <span>Choose File</span>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label>Identify products by</label>
-                    <div className="radio-btn-group">
-                      <div className="radio-inline">
-                        <input type="radio" id="ASIN" name="gender" value="asin" onChange={(e) => setselectedfield("ASIN")} />
-                        <span></span>
-                        <label htmlFor="ASIN">ASIN</label>
-                      </div>
-                      <div className="radio-inline">
-                        <input type="radio" id="UPC" name="gender" value="upc" onChange={(e) => setselectedfield("UPC")} />
-                        <span></span>
-                        <label htmlFor="UPC">UPC</label>
-                      </div>
-                      <div className="radio-inline">
-                        <input type="radio" id="EAN" name="gender" value="ean" onChange={(e) => setselectedfield("EAN")} />
-                        <span></span>
-                        <label htmlFor="EAN">EAN</label>
+                  <form className="upload-csv-form">
+                    <div className="form-group">
+                      <label>File Upload</label>
+                      <div className="file-upload-field">
+                        <input type="file" name="upload file" id="csvfiletxt" onChange={(e) => handleChange(e)} />
+                        <span>Choose File</span>
                       </div>
                     </div>
-                  </div>
-                  <div className="form-group">
-                    <label>UPC Field</label>
-                    <select id="upcHeader" onChange={(e) => upcHeader(e)} >
-                    <option>Select Type</option>
-                      {headers.map(item => (
-                        <option
-                          key={item.hedaerId}
-                          value={item.headerName}
-                        >
-                          {item.headerName}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Price Field</label>
-                    <select id="priceHeader" onChange={(e) => priceHeader(e)}>
-                      <option>Select Price</option>
-                      {headers.map(item => (
-                        <option
-                          key={item.hedaerId}
-                          value={item.headerName}
-                        >
-                          {item.headerName}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Supplier</label>
-                    <Input
-                              className="btn-pill form-control"
-                              type="text"
-                              name="supplier"
-                               value={supplier}
-                               onChange={(e) => set_supplier(e.target.value)}
-                              placeholder="Email address"
-                            />
-                  </div>
-                  {/* <div className="Supplier-box">
+                    <div className="form-group">
+                      <label>Identify products by</label>
+                      <div className="radio-btn-group">
+                        <div className="radio-inline">
+                          <input type="radio" id="ASIN" name="gender" value="asin" onChange={(e) => setselectedfield("ASIN")} />
+                          <span></span>
+                          <label htmlFor="ASIN">ASIN</label>
+                        </div>
+                        <div className="radio-inline">
+                          <input type="radio" id="UPC" name="gender" value="upc" onChange={(e) => setselectedfield("UPC")} />
+                          <span></span>
+                          <label htmlFor="UPC">UPC</label>
+                        </div>
+                        <div className="radio-inline">
+                          <input type="radio" id="EAN" name="gender" value="ean" onChange={(e) => setselectedfield("EAN")} />
+                          <span></span>
+                          <label htmlFor="EAN">EAN</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label>UPC Field</label>
+                      <select id="upcHeader" onChange={(e) => upcHeader(e)} >
+                        <option>Select Type</option>
+                        {headers.map(item => (
+                          <option
+                            key={item.hedaerId}
+                            value={item.headerName}
+                          >
+                            {item.headerName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Price Field</label>
+                      <select id="priceHeader" onChange={(e) => priceHeader(e)}>
+                        <option>Select Price</option>
+                        {headers.map(item => (
+                          <option
+                            key={item.hedaerId}
+                            value={item.headerName}
+                          >
+                            {item.headerName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Supplier</label>
+                      <Input
+                        className="btn-pill form-control"
+                        type="text"
+                        name="supplier"
+                        value={supplier}
+                        onChange={(e) => set_supplier(e.target.value)}
+                        placeholder="Email address"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>MarketPlace</label>
+                      <select  onChange={(e) => marketplace(e)}>
+                        <option>Select MarketPlace</option>
+                        <option>UK</option>
+                        <option>Italy</option>
+                        <option>France</option>
+                        <option>Germany</option>
+                        <option>Spain</option>
+                      </select>
+                    </div>
+                    {/* <div className="Supplier-box">
                     <h3>Supplier</h3>
                     <button className="add-new-supplier">add a new supplier</button>
                     <div className="form-group">
@@ -367,14 +384,14 @@ const FileScanUpload = (props) => {
                       </select>
                     </div>
                   </div> */}
-                  <div className="form-group">
-                    <button className="Import-btn" onClick={(e) => saveFileData(e)}>Import</button>
-                  </div>
-                </form>
+                    <div className="form-group">
+                      <button className="Import-btn" onClick={(e) => saveFileData(e)}>Import</button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
-        </div>
         </LoadingOverlay>
       </Container>
 
