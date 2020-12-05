@@ -55,6 +55,10 @@ const FileScanUpload = (props) => {
           seteur_gbp(data.rates.GBP);
           console.log(eur_gbp)
         });
+
+        // var shell = new ActiveXObject("Shell.Application");       
+        //     var command = "C:\\windows\\ winword.exe";
+        //     shell.ShellExecute(command, "",   "", "open", "1");
       // var url = '/getWholesalers'
       // var url = 'https://www.amazstock.com/getwholesalers'
       // fetch(url)
@@ -143,6 +147,7 @@ const FileScanUpload = (props) => {
         doc["marketplace"]=selectedMarketPlace;
         doc["seller_id"] = "A7F8I9TOT44ZD";
         doc["mws_auth_token"] = "amzn.mws.8eb9dc9c-e838-9c01-610a-39d8e5a4ac4a";
+        doc["status"]="pending";
         var url = 'http://localhost:5000/addFile';
         fetch(url,
           {
@@ -328,7 +333,7 @@ const FileScanUpload = (props) => {
                         {headers.map(item => (
                           <option
                             key={item.hedaerId}
-                            value={item.headerName}
+                            value={item.hedaerId}
                           >
                             {item.headerName}
                           </option>
@@ -342,7 +347,7 @@ const FileScanUpload = (props) => {
                         {headers.map(item => (
                           <option
                             key={item.hedaerId}
-                            value={item.headerName}
+                            value={item.hedaerId}
                           >
                             {item.headerName}
                           </option>

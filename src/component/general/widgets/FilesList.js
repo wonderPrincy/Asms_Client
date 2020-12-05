@@ -71,10 +71,10 @@ const FilesList = (props) => {
     }
   }
   const navigateToFileData = (fileId) => {
-///${fileId}
-localStorage.removeItem("selectedfilelistdata");
-localStorage.setItem("selectedfilelistdata",fileId);
-console.log(fileId);
+    ///${fileId}
+    localStorage.removeItem("selectedfilelistdata");
+    localStorage.setItem("selectedfilelistdata", fileId);
+    console.log(fileId);
     history.push(`${process.env.PUBLIC_URL}/dashboard/FileListData`);
   };
   // const onloadmethod = () => {
@@ -127,18 +127,34 @@ console.log(fileId);
                   {
                     (getFiles != null) ?
                       getFiles.map(item => (
-                        <tr  key={item._id}>
+                        <tr key={item._id}>
                           <td>{new Date(item.CreatedOn).toLocaleDateString()}</td>
                           <td>{item.supplierid}</td>
                           <td>{item.totalRecords}</td>
                           <td>{item.marketplace}</td>
                           <td>
-                            <Button
-                              color="primary btn-block"
-                              onClick={(e) => navigateToFileData(item.filename)}
-                            >
-                              View Products
+                            {/* {
+                            (graphImg != "") ? <img src={graphImg} /> : <img src={require("../../../assets/images/graph.png")} />
+                          } */}
+                            {
+                              (item.status == "processed")
+                                ?
+                                <Button
+                                  color="primary btn-block"
+                                  onClick={(e) => navigateToFileData(item.filename)}
+                                 
+                                >
+                                  View Products
                                     </Button>
+                                :
+                                <Button
+                                  color="primary btn-block"
+                                  disabled="true"
+                                  onClick={(e) => navigateToFileData(item.filename)}
+                                >
+                                  View Products
+                                    </Button>
+                            }
                           </td>
                         </tr>
                       ))
