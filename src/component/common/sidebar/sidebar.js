@@ -92,6 +92,7 @@ const Sidebar = (props) => {
   };
 
   const toggletNavActive = (item) => {
+    console.log(item);
     if (!item.active) {
       MENUITEMS.forEach((a) => {
         if (MENUITEMS.includes(item)) a.active = false;
@@ -111,9 +112,10 @@ const Sidebar = (props) => {
     }
     item.active = !item.active;
     setMainMenu({ mainmenu: MENUITEMS });
-    document
-      .querySelector(".iconsidebar-menu")
-      .classList.remove("iconbar-mainmenu-close");
+    // document
+    //   .querySelector(".iconsidebar-menu")
+    //   .classList.remove("iconbar-mainmenu-close");
+      document.querySelector(".iconsidebar-menu").classList.add('iconbar-mainmenu-close');
   };
 
   const scrollToRight = () => {

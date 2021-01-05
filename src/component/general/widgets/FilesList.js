@@ -152,7 +152,7 @@ const FilesList = (props) => {
                                   disabled="true"
                                   onClick={(e) => navigateToFileData(item.filename)}
                                 >
-                                  View Products
+                                  Processing
                                     </Button>
                             }
                           </td>

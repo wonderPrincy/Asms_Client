@@ -78,7 +78,9 @@ const Header = (props) => {
 
     setProfile(localStorage.getItem("profileURL") || man);
     setName(localStorage.getItem("Name"));
-    // document.querySelector(".iconsidebar-menu").classList.add('iconbar-second-close');
+    // added by princi
+     document.querySelector(".iconsidebar-menu").classList.add('iconbar-mainmenu-close');
+     //end here
     document.addEventListener("keydown", escFunction, false);
 
     return () => {
@@ -158,12 +160,12 @@ const Header = (props) => {
     }
   };
   const openCloseSidebar = (sidebartoggle) => {
+    console.log(sidebartoggle);
     if (sidebartoggle === "iconsidebar-menu") {
-      setSidebar("iconbar-mainmenu-close");
-      document
-        .querySelector(".iconsidebar-menu")
-        .classList.add("iconbar-mainmenu-close");
-    } else if (sidebartoggle === "iconbar-mainmenu-close") {
+      // setSidebar("iconbar-mainmenu-close");
+      // document
+      //   .querySelector(".iconsidebar-menu")
+      //   .classList.add("iconbar-mainmenu-close");
       setSidebar("iconbar-second-close");
       document
         .querySelector(".iconsidebar-menu")
@@ -171,8 +173,21 @@ const Header = (props) => {
       document
         .querySelector(".iconsidebar-menu")
         .classList.remove("iconbar-mainmenu-close");
-    } else {
+    }
+    //  else if (sidebartoggle === "iconbar-mainmenu-close") {
+    //   setSidebar("iconbar-second-close");
+    //   document
+    //     .querySelector(".iconsidebar-menu")
+    //     .classList.add("iconbar-second-close");
+    //   document
+    //     .querySelector(".iconsidebar-menu")
+    //     .classList.remove("iconbar-mainmenu-close");
+    // } 
+    else {
       setSidebar("iconsidebar-menu");
+       document
+        .querySelector(".iconsidebar-menu")
+        .classList.add("iconbar-mainmenu-close");
       document
         .querySelector(".iconsidebar-menu")
         .classList.remove("iconbar-second-close");
@@ -336,9 +351,9 @@ const Header = (props) => {
               </a>
             </li>
 
-            <Bookmark />
+            {/* <Bookmark /> */}
 
-            <li className="onhover-dropdown">
+            {/* <li className="onhover-dropdown">
               <img
                 className="img-fluid img-shadow-secondary"
                 src={require("../../../assets/images/dashboard/like.png")}
@@ -383,8 +398,8 @@ const Header = (props) => {
                   </Button>
                 </li>
               </ul>
-            </li>
-            <li className="onhover-dropdown">
+            </li> */}
+            {/* <li className="onhover-dropdown">
               <img
                 className="img-fluid img-shadow-warning"
                 src={require("../../../assets/images/dashboard/notification.png")}
@@ -421,8 +436,8 @@ const Header = (props) => {
                   <a href="#javascript">All </a> notification
                 </li>
               </ul>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <a
                 className="right_side_toggle"
                 href="#javascript"
@@ -434,7 +449,7 @@ const Header = (props) => {
                   alt=""
                 />
               </a>
-            </li>
+            </li> */}
             <li className="onhover-dropdown">
               {" "}
               <span className="media user-header">
