@@ -61,7 +61,15 @@ export const MENUITEMS = [
     //   }
     // ],
   },
-
+  {
+    title: "Seller Products",
+    icon: <i className="pe-7s-home pe-lg"></i>,
+    path: `${process.env.PUBLIC_URL}/dashboard/SellerProducts`,
+    type: "sub",
+    active: true,
+    bookmark: true,
+   // children:[]
+  },
   {
     title: "Upload Csv",
     icon: <i className="pe-7s-portfolio pe-lg"></i>,

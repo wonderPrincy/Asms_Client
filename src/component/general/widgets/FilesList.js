@@ -27,6 +27,7 @@ const FilesList = (props) => {
   const [getFiles, set_getFiles] = useState(null);
   try {
     var userid = localStorage.getItem("id");
+    console.log(userid);
     var url = 'http://localhost:5000/getFiles/' + userid;
     fetch(url)
       .then((response1) => {

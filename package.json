@@ -90,6 +90,7 @@
     "react-vertical-timeline-component": "^2.6.2",
     "reactour": "^1.18.0",
     "reactstrap": "^8.6.0",
+    "read-more-react": "^1.0.10",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.4.1",

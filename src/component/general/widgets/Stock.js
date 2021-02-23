@@ -167,7 +167,7 @@ const Stock = (props) => {
             return response.json();
           })
           .then((data) => {
-            console.log(data.products[0].stats);
+            console.log(data);
             set_KeepaResponseGB(data.products[0]);
             set_KeepaResponse(data.products[0]);
             set_primePriceUK((((data.products[0].stats.current[0] != -1) ? data.products[0].stats.current[0] : data.products[0].stats.current[10]) / 100).toFixed(2));

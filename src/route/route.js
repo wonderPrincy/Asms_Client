@@ -10,6 +10,7 @@ import Stock from "../component/general/widgets/Stock";
 import ScanUpload from "../component/general/widgets/FileScanUpload";
 import FilesList from "../component/general/widgets/FilesList";
 import FileListData from "../component/general/widgets/FilesListData";
+import SellerProducts from "../component/general/widgets/SellerProducts";
 
 // Ui Element
 import Statecolor from "../component/ui-element/statecolor";
@@ -186,6 +187,7 @@ import Samplepage from "../pages/samplepage";
 import Supportticket from "../pages/supportticket";
 import Searchwebsite from "../pages/search/searchwebsite";
 
+
 // import UploadCsv from "../component/general/widgets/UploadCsv";
 
 
@@ -199,6 +201,7 @@ export const routes = [
   {path:"/dashboard/FileScanUpload",Component:ScanUpload},
   {path:"/dashboard/FilesList",Component:FilesList},
   {path:"/dashboard/FileListData",Component:FileListData},
+  {path:"/dashboard/SellerProducts",Component:SellerProducts},
 
 
 
